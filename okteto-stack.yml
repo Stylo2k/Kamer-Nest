@@ -1,0 +1,13 @@
+services:
+  nest-api:
+    image: node:18
+    command: ["/bin/bash", "-c", "\"npm i -g yarn&&yarn install&&yarn run start:dev\""]
+    public: true
+    ports:
+      - 3000:3000
+  postgresql:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql:/var/lib/postgresql/data
