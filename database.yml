@@ -26,7 +26,7 @@ spec:
       containers:
       - name: prisma-db
         image: stylo2k/kamer-db:latest
-        env: # TODO: convert to envFrom
+        env: # TODO: convert to env
         - name: POSTGRES_USER
           value: postgres
         - name: POSTGRES_PASSWORD
