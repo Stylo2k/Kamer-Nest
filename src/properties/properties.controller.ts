@@ -9,18 +9,27 @@ import { PropertiesService } from './properties.service';
 import { LocationDto } from './location/dto/location.dto';
 import { CityService } from './city/city.service';
 import { CityQueryDto } from './city/dto';
+import { StatsService } from './stats/stats.service';
+import { StatsDto } from './stats/dto';
 
 @Controller('properties')
 @UseGuards(JwtGuard)
 export class PropertiesController {
     constructor(private readonly propertiesService: PropertiesService,
         private readonly locationService : LocationService,
-        private readonly cityService : CityService){}
+        private readonly cityService : CityService,
+        private readonly statsService : StatsService){}
     
     @Get()
     getAll(): Promise<Property[]> {
         return this.propertiesService.getAll();
     }
+
+    @Get('stats/:city')
+    getStats(@Param('city') statsReq : StatsDto) {
+        return this.statsService.getStats(statsReq);
+    }
+
 
     @Get('location')
     getAtCoordinates(@Query() coordinates: LocationDto, @GetUser() reqUser : ReqUser) {
