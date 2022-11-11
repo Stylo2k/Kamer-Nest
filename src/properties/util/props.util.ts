@@ -30,7 +30,7 @@ async function findByLocation({ lng, lat, userId }: LocationSearch) {
     return ownedByUser;
 }
 
-interface props {
+interface queryProps {
     city: {};
     ownerId : number;
     active?: boolean;
@@ -40,14 +40,20 @@ interface props {
     };
 }
 
+interface configProps {
+    orderBy?: {};
+    take?: number;
+}
+
 async function findByCity(city: string, userId: number, query: CityQueryDto) {
     const active = query.active;
     const minPrice = query.minPrice;
     const maxPrice = query.maxPrice;
     const top = query.top;
     const order = query.order;
+    const orderBy = query.orderBy;
 
-    let props : props = {
+    let props : queryProps = {
         city: {
             equals: city,
             mode: 'insensitive'
@@ -64,12 +70,21 @@ async function findByCity(city: string, userId: number, query: CityQueryDto) {
         lte: maxPrice || 99999999999999,
     }
 
+    let config : configProps = {}
+
+    if (top !== undefined) {
+        config.take = top;
+    }
+
+    if (orderBy !== undefined) {
+        config.orderBy = {
+            [orderBy]: order
+        }
+    }
+
     const ownedByUserAtCity = await this.prismaService.property.findMany({
         where: props,
-        orderBy: {
-            rent: order || 'asc'
-        },
-        take: top || 99999999999999
+        ...config
     });
 
     return ownedByUserAtCity;

@@ -28,6 +28,20 @@ function transformOrder(stuff : TransformFnParams) {
     return undefined;
 }
 
+
+function transformOrderBy(stuff : TransformFnParams) {
+    if (stuff.value === undefined) {
+        return undefined;
+    }
+    if (stuff.value.toLowerCase().trim() === 'rent') {
+        return 'rent';
+    }
+    if (stuff.value.toLowerCase().trim() === 'areasq') {
+        return 'areaSq';
+    }
+    return undefined;
+}
+
 class CityPropsDto {
     @IsBoolean()
     @Transform(transformActive)
@@ -48,6 +62,10 @@ class CityPropsDto {
     @IsString()
     @Transform(transformOrder)
     order: 'asc' | 'desc' = 'asc';
+
+    @IsString()
+    @Transform(transformOrderBy)
+    orderBy: 'rent' | 'areaSq' = 'rent';
 }
 
 export class CityQueryDto extends PartialType (CityPropsDto) {
