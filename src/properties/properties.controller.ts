@@ -7,12 +7,15 @@ import { ReqPropertyDto, UpdatePropertyDto } from './dto';
 import { LocationService } from './location/location.service';
 import { PropertiesService } from './properties.service';
 import { LocationDto } from './location/dto/location.dto';
+import { CityService } from './city/city.service';
+import { CityQueryDto } from './city/dto';
 
 @Controller('properties')
 @UseGuards(JwtGuard)
 export class PropertiesController {
     constructor(private readonly propertiesService: PropertiesService,
-        private readonly locationService : LocationService){}
+        private readonly locationService : LocationService,
+        private readonly cityService : CityService){}
     
     @Get()
     getAll(): Promise<Property[]> {
@@ -34,6 +37,10 @@ export class PropertiesController {
         return this.locationService.deleteAtCoordinates(coordinates, reqUser);
     }
 
+    @Get('city/:city')
+    getAtCity(@Param('city') city : string, @Query() cityQuery : CityQueryDto, @GetUser() reqUser : ReqUser) {
+        return this.cityService.getAtCity(city, reqUser, cityQuery);
+    }
 
     @Get('mine')
     getMine(@GetUser() user : ReqUser){
