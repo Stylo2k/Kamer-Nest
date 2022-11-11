@@ -1,8 +1,8 @@
 import { PartialType } from "@nestjs/mapped-types";
 import { Transform, TransformFnParams, Type } from "class-transformer";
-import { IsBoolean, IsNumber } from "class-validator";
+import { IsBoolean, IsNumber, IsString } from "class-validator";
 
-function transform (stuff : TransformFnParams) {
+function transformActive (stuff : TransformFnParams) {
     if (stuff.value === undefined) {
         return undefined;
     }
@@ -15,9 +15,22 @@ function transform (stuff : TransformFnParams) {
     return undefined;
 }
 
+function transformOrder(stuff : TransformFnParams) {
+    if (stuff.value === undefined) {
+        return undefined;
+    }
+    if (stuff.value.toLowerCase().trim() === 'asc') {
+        return 'asc';
+    }
+    if (stuff.value.toLowerCase().trim() === 'desc') {
+        return 'desc';
+    }
+    return undefined;
+}
+
 class CityPropsDto {
     @IsBoolean()
-    @Transform(transform)
+    @Transform(transformActive)
     active: boolean;
 
     @Type(() => Number)
@@ -27,6 +40,14 @@ class CityPropsDto {
     @Type(() => Number)
     @IsNumber()
     maxPrice: number;
+    
+    @Type(() => Number)
+    @IsNumber()
+    top: number = 10;
+
+    @IsString()
+    @Transform(transformOrder)
+    order: 'asc' | 'desc' = 'asc';
 }
 
 export class CityQueryDto extends PartialType (CityPropsDto) {

@@ -34,13 +34,18 @@ interface props {
     city: {};
     ownerId : number;
     active?: boolean;
-    rent?: {};
+    rent?: {
+        lte?: number;
+        gte?: number;
+    };
 }
 
 async function findByCity(city: string, userId: number, query: CityQueryDto) {
     const active = query.active;
     const minPrice = query.minPrice;
     const maxPrice = query.maxPrice;
+    const top = query.top;
+    const order = query.order;
 
     let props : props = {
         city: {
@@ -54,23 +59,17 @@ async function findByCity(city: string, userId: number, query: CityQueryDto) {
         props.active = active;
     }
     
-    
-    if (maxPrice !== undefined) {
-        props.rent = {
-            lte: maxPrice,
-            gte: 0 || minPrice
-        }
-    }
-
-    if (minPrice !== undefined) {
-        props.rent = {
-            lte: maxPrice || 99999999999999,
-            gte: minPrice
-        }
+    props.rent = {
+        gte: minPrice || 0,
+        lte: maxPrice || 99999999999999,
     }
 
     const ownedByUserAtCity = await this.prismaService.property.findMany({
-        where: props
+        where: props,
+        orderBy: {
+            rent: order || 'asc'
+        },
+        take: top || 99999999999999
     });
 
     return ownedByUserAtCity;
