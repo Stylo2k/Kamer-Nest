@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kamer-nest-api
+spec:
+  type: LoadBalancer
+  selector:
+    app: kamer-nest-api
+  ports:
+  - port: 3030
+    targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kamer-nest-api
+spec:
+  selector:
+    matchLabels:
+      app: kamer-nest-api
+  template:
+    metadata:
+      labels:
+        app: kamer-nest-api
+    spec:
+      containers:
+      - name: kamer-nest-api
+        image: stylo2k/nest-api:latest
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "1500m"
+        ports:
+        - containerPort: 3000
+
