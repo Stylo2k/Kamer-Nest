@@ -26,7 +26,7 @@ spec:
       containers:
       - name: prisma-db
         image: stylo2k/kamer-db:latest
-        env: # TODO: convert to envFrom
+        env: # TODO: convert to env
         - name: POSTGRES_USER
           value: postgres
         - name: POSTGRES_PASSWORD
@@ -36,7 +36,7 @@ spec:
         resources:
           limits:
             memory: "500Mi"
-            cpu: "1500m"
+            cpu: "300m"
         ports:
         - containerPort: 5432
 
