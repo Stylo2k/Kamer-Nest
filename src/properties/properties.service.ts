@@ -3,6 +3,7 @@ import { Property } from '@prisma/client';
 import { ReqUser } from 'src/auth/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ReqPropertyDto, UpdatePropertyDto } from './dto';
+import { getPropertyOwner } from './util/props.util';
 
 @Injectable()
 export class PropertiesService {
@@ -47,7 +48,7 @@ export class PropertiesService {
 
     async remove(propertyId: number, reqUser : ReqUser) {
         const userId = reqUser.user.id;
-        const propertyOwner = await this.getPropertyOwner(propertyId);
+        const propertyOwner = await getPropertyOwner.call(this, propertyId);
 
         // spoof the response if the property does not exist
         if (!propertyOwner || propertyOwner.id !== userId) {
@@ -62,7 +63,7 @@ export class PropertiesService {
     }
 
     async patch(propertyId: number, propertyData: UpdatePropertyDto, reqUser : ReqUser) {
-        const propertyOwner = await this.getPropertyOwner(+propertyId);
+        const propertyOwner = await getPropertyOwner.call(this, +propertyId);
         const userId = reqUser.user.id;
 
         if (!propertyOwner || propertyOwner.id !== userId) {
@@ -77,16 +78,6 @@ export class PropertiesService {
         });
     }
 
-    async getPropertyOwner(propertyId: number) {
-        const propertyOwner = await this.prismaService.property.findUnique({
-            where: {
-                id: propertyId
-            },
-            include: {
-                owner: true
-            }
-        });
-        return propertyOwner && propertyOwner.owner;
-    }
+
 
 }
