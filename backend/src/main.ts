@@ -9,6 +9,7 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // if true, it will throw an error if the user sends a property that is not in the DTO
     transform: true, // transform the data to the type we want
     }));
+    app.enableCors();
   await app.listen(3000);
 }
 bootstrap();
