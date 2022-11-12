@@ -1,7 +1,8 @@
 import { createForm, validateForm, getElemsFromForm } from '../../util';
 import { LoginBody, AuthResponseData, ErrorResponseData } from './auth.dto';
-
+import { serialize } from 'cookie'
 import axios from 'axios';
+import { NextApiRequest, NextApiResponse } from "next";
 
 axios.defaults.baseURL = 'http://localhost:3000/';
 
@@ -12,9 +13,12 @@ export default function Login() {
             const response = await axios.post('auth/login', {
                 email,
                 password
+            }, {
+                withCredentials: true
             });
             const data : AuthResponseData = response.data;
             console.log(data);
+
         } catch (error : any) {
             alert(error);
             const errorResponseData : ErrorResponseData = error.response.data;
