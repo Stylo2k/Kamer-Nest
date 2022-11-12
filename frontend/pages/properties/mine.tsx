@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { ErrorResponseData } from '../auth/auth.dto';
 
 axios.defaults.baseURL = 'http://localhost:3000/';
@@ -30,11 +31,13 @@ interface Property {
 }
 
 export default function Mine() {
+    const [properties, setProperties] = useState<Property[]>([]);
+    
     async function getMine() {
         try {
             const response = await axios.get(MINE_ENDPOINT);
             const data : Property[] = response.data;
-            console.log(data);
+            setProperties(data);
         } catch (error : any) {
             alert(error);
             const errorResponseData : ErrorResponseData = error.response.data;
@@ -42,9 +45,21 @@ export default function Mine() {
         }
     }
 
+    useEffect(() => {
+        getMine();
+    })
+
     return (
         <div>
-            <button onClick={getMine}>Get Mine</button>
+            <div>
+                <h1>My Properties</h1>
+                {properties.map(property => (
+                    <div key={property.id}>
+                    <h4>{property.id}</h4>
+                    <span>{JSON.stringify(property)}</span>
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
