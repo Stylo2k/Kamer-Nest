@@ -1,34 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { ErrorResponseData } from '../auth/auth.dto';
+import { Property } from './property.dto';
 
 axios.defaults.baseURL = 'http://localhost:3000/';
 axios.defaults.withCredentials = true;
 
 const MINE_ENDPOINT = 'properties/mine';
 
-
-interface Property {
-    id: number
-    areaSq: number
-    city: string
-    coverImageUrl: string
-    furnished: boolean
-    latitude: number
-    longitude: number
-    postalCode: string
-    type: string
-    rent: number
-    title: string
-    deposit: number
-    gender: string
-    active: boolean
-    description: string
-    createdAt: Date
-    updatedAt: Date
-    pets: boolean
-    ownerId: number
-}
 
 export default function Mine() {
     const [properties, setProperties] = useState<Property[]>([]);

@@ -1,24 +1,14 @@
 import {createForm, validateForm, getElemsFromForm} from '../../util';
+import { PropertyRequest } from './property.dto';
 
 export default function Add() {
+    function addProperty(body : PropertyRequest) {
+
+    }
     function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        // const form = e.currentTarget;
-        // const {title, description, address, price, bedrooms, bathrooms, sqft, image} = getElemsFromForm(form, ['title', 'description', 'address', 'price', 'bedrooms', 'bathrooms', 'sqft', 'image']);
-        // const body = {
-        //     title,
-        //     description,
-        //     address,
-        //     price,
-        //     bedrooms,
-        //     bathrooms,
-        //     sqft,
-        //     image
-        // };
-        // const valid = validateForm(body);
-        // if (valid) {
-        //     console.log(body);
-        // }
+        const form = e.currentTarget;
+        console.log('YO')
     }
 
     return (
