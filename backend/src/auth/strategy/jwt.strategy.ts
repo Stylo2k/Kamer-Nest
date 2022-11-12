@@ -9,7 +9,7 @@ import { JwtPayload, ReqUser } from "../dto";
 
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(config : ConfigService, private readonly prismaService : PrismaService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -29,6 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             throw new Error('User not found');
         } 
         const safeUser = new SafeUserDto(user);
-        return {user : safeUser, payload};
+        return {...safeUser, payload};
     }
 }

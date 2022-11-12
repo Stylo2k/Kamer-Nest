@@ -9,7 +9,7 @@ export class CityService {
     constructor(private readonly prismaService : PrismaService) {}
 
     async getAtCity(city: string, reqUser: ReqUser, query : CityQueryDto) {
-        const userId = reqUser.user.id;
+        const userId = reqUser.id;
         const found = await findByCity.call(this, city, userId, query);
 
         if (found.length === 0) {

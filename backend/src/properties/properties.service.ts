@@ -16,7 +16,7 @@ export class PropertiesService {
     async getMine(reqUser: ReqUser) {
         const ownerProperties = await this.prismaService.property.findMany({
             where: {
-                ownerId: reqUser.user.id
+                ownerId: reqUser.id
             }
         });
         return ownerProperties;
@@ -37,7 +37,7 @@ export class PropertiesService {
     }
 
     async create(reqUser : ReqUser, propertyData: ReqPropertyDto) {
-        let newPropertyData = {...propertyData, ownerId : reqUser.user.id};
+        let newPropertyData = {...propertyData, ownerId : reqUser.id};
 
         const data =  await this.prismaService.property.create({
             data: newPropertyData,
@@ -47,7 +47,7 @@ export class PropertiesService {
     }
 
     async remove(propertyId: number, reqUser : ReqUser) {
-        const userId = reqUser.user.id;
+        const userId = reqUser.id;
         const propertyOwner = await getPropertyOwner.call(this, propertyId);
 
         // spoof the response if the property does not exist
@@ -64,7 +64,7 @@ export class PropertiesService {
 
     async patch(propertyId: number, propertyData: UpdatePropertyDto, reqUser : ReqUser) {
         const propertyOwner = await getPropertyOwner.call(this, +propertyId);
-        const userId = reqUser.user.id;
+        const userId = reqUser.id;
 
         if (!propertyOwner || propertyOwner.id !== userId) {
             throw new UnauthorizedException(`You are not the owner of this property`);

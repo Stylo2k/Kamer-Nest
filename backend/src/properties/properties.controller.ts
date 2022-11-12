@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { Property } from '@prisma/client';
 import { GetUser } from 'src/auth/decorater';
 import { ReqUser } from 'src/auth/dto';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { ReqPropertyDto, UpdatePropertyDto } from './dto';
 import { LocationService } from './location/location.service';
 import { PropertiesService } from './properties.service';
@@ -11,9 +10,10 @@ import { CityService } from './city/city.service';
 import { CityQueryDto } from './city/dto';
 import { StatsService } from './stats/stats.service';
 import { StatsDto } from './stats/dto';
+import { AuthenticatedGuard } from 'src/auth/guard/authenticated.guard';
 
 @Controller('properties')
-@UseGuards(JwtGuard)
+@UseGuards(AuthenticatedGuard)
 export class PropertiesController {
     constructor(private readonly propertiesService: PropertiesService,
         private readonly locationService : LocationService,

@@ -5,11 +5,13 @@ import { Login, SignUp } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { UserService } from 'src/user/user.service';
 
 
 @Injectable()
 export class AuthService {
-    constructor(private prismaService : PrismaService, private jwtService : JwtService, private config : ConfigService) {}
+    constructor(private prismaService : PrismaService, private config : ConfigService,
+        private readonly userService : UserService) {}
 
     async signup(dto : SignUp) {
         
@@ -32,7 +34,7 @@ export class AuthService {
                 lastName : user.lastName,
                 createdAt: user.createdAt,
                 lastLogin: user.lastLogin,
-                token: await this.signToken(user.id, user.email)
+                // token: await this.signToken(user.id, user.email)
             };
 
         } catch (error) {
@@ -78,18 +80,32 @@ export class AuthService {
             lastName : user.lastName,
             createdAt: user.createdAt,
             lastLogin: oldLogin,
-            token: await this.signToken(user.id, user.email)
+            // token: await this.signToken(user.id, user.email)
         };
     }
 
-    async signToken(id : number, email : string) {
-        const payload = {
-            sub : id,
-            email
+    // async signToken(id : number, email : string) {
+    //     const payload = {
+    //         sub : id,
+    //         email
+    //     }
+    //     return this.jwtService.signAsync(payload, {
+    //         'expiresIn' : '15m',
+    //         secret: this.config.get('JWT_SECRET')
+    //     });
+    // }
+
+    async validateUser(email : string, password : string) {
+        const user = await this.userService.findOne(email);
+        console.log("validate user", user);
+        if (!user) {
+            return null;
         }
-        return this.jwtService.signAsync(payload, {
-            'expiresIn' : '15m',
-            secret: this.config.get('JWT_SECRET')
-        });
+        const pwMatches = argon.verify(user.password, password);
+
+        if (!pwMatches) {
+            return null;
+        }
+        return user;
     }
 }

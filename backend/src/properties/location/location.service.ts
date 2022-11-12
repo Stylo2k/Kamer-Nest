@@ -11,13 +11,13 @@ export class LocationService {
     constructor(private readonly prismaService : PrismaService) {}
     
     async getAtCoordinates({lng, lat} : LocationDto, reqUser : ReqUser) {
-        const userId = reqUser.user.id;
+        const userId = reqUser.id;
         const ownedByUser = await findByLocation.call(this, {lng, lat, userId});
         return ownedByUser;
     }
 
     async patchLocation({lng, lat} : LocationDto, propertyData : UpdatePropertyDto, reqUser : ReqUser) {
-        const userId = reqUser.user.id;
+        const userId = reqUser.id;
         const ownedByUser = await findByLocation.call(this, {lng, lat, userId});
         
         if (ownedByUser.length === 0) {
@@ -37,7 +37,7 @@ export class LocationService {
     }
 
     async deleteAtCoordinates({lng, lat} : LocationDto, reqUser : ReqUser) {
-        const userId = reqUser.user.id;
+        const userId = reqUser.id;
         const ownedByUser = await findByLocation.call(this, {lng, lat, userId});
         
         if (ownedByUser.length === 0) {

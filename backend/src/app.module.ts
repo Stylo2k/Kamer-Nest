@@ -11,7 +11,6 @@ import { UserModule } from './user/user.module';
     envFilePath: '.env',
     isGlobal: true
   }), PropertiesModule, PrismaModule, AuthModule, UserModule],
-  controllers: [AppController],
-  providers: [],
+  controllers: [AppController]
 })
 export class AppModule {}
