@@ -11,7 +11,10 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // if true, it will throw an error if the user sends a property that is not in the DTO
     transform: true, // transform the data to the type we want
     }));
-    app.enableCors();
+    app.enableCors({
+        credentials: true,
+        origin: 'http://localhost:3030'
+    });
     const sessionSecret = process.env.SESSION_SECRET || 'secret';
     app.use(
         session({
